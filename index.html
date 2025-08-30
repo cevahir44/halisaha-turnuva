@@ -335,6 +335,13 @@
         });
     }
 
+    // Takımları toplam puana göre sırala
+    const sortedTeams = teams.map(team => {
+        const teamScores = scores[team.id] || {};
+        const totalScore = Object.values(teamScores).reduce((sum, current) => sum + (current || 0), 0);
+        return { ...team, totalScore };
+    }).sort((a, b) => b.totalScore - a.totalScore);
+
 
     // JSX
     return (
@@ -581,13 +588,12 @@
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {teams.map(team => {
+                    {sortedTeams.map(team => {
                       const teamScores = scores[team.id] || {};
-                      const totalScore = Object.values(teamScores).reduce((sum, current) => sum + (current || 0), 0);
                       return (
                         <tr key={team.id}>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{team.name}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-bold">{totalScore}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-bold">{team.totalScore}</td>
                           {Array.from({ length: numberOfMatchesPerTeam }).map((_, i) => (
                             <td key={i} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                               {showScoreInput ? (
